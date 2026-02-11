@@ -14,7 +14,6 @@ Standalone, serverless, peer-to-peer, end-to-end encrypted chat system running o
 - **Physical Security**: No protection against attackers with physical device access
 - **Metadata Leakage**: Connection metadata (IP addresses, timing, packet sizes) is visible on the network
 - **No Multi-Device Sync**: Each ESP32 has its own identity; no shared state across devices
-- **No Offline Messages**: Both devices must be online simultaneously to exchange messages
 
 This project is intended for educational purposes, privacy enthusiasts, and experimentation.
 
