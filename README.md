@@ -1,4 +1,4 @@
-# GhostESP: Chat
+# GhostESP: Chat WIP
 
 Standalone, serverless, peer-to-peer, end-to-end encrypted chat system running on ESP32 microcontrollers.
 
