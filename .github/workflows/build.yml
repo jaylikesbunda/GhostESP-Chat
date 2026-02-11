@@ -87,7 +87,7 @@ jobs:
           mkdir -p release
           cp build/bootloader/bootloader.bin release/
           cp build/partition_table/partition-table.bin release/partitions.bin
-          cp build/ghostesp.bin release/firmware.bin
+          cp build/ghostesp-chat.bin release/firmware.bin
           
           python3 -m esptool --chip ${{ matrix.target.idf_target }} merge_bin \
             --output release/ghostesp-merged.bin \
