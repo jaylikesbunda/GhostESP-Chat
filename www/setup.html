@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostESP: Chat - Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface-elevated: #1a1a1a;
+            --text: #ffffff;
+            --text-dim: #999999;
+            --text-secondary: #666666;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.15);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --radius-sm: 6px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --font-mono: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-lg);
+        }
+
+        .container {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header {
+            background: var(--surface-elevated);
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .wizard-body {
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-strong);
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #fff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+        }
+
+        .step-dot.done {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .step-line {
+            width: 32px;
+            height: 1px;
+            background: var(--border-strong);
+        }
+
+        .step {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        .step h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .step p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .network-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 280px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .network-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .network-list::-webkit-scrollbar-thumb {
+            background-color: var(--border);
+            border-radius: 4px;
+        }
+
+        .network-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .network-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-strong);
+            transform: translateX(2px);
+        }
+
+        .network-item.selected {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-strong);
+        }
+
+        .network-name {
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .network-signal {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .scan-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            border-radius: var(--radius);
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .scan-btn:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-strong);
+            color: var(--text);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            color: var(--text);
+            transition: all 0.2s ease;
+            font-family: var(--font-mono);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--border-strong);
+            background: var(--surface);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 500;
+            font-family: var(--font-mono);
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: #f8f8f8;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-elevated);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-strong);
+        }
+
+        .status-msg {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: center;
+            min-height: 1.2em;
+        }
+
+        .status-msg.error {
+            color: #ef4444;
+        }
+
+        .status-msg.success {
+            color: #10b981;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-strong);
+            border-top-color: var(--text);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: var(--spacing-xs);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            font-size: 1.5rem;
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            .container {
+                border-radius: 0;
+                border: none;
+                min-height: 100vh;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Setup Wizard</h1>
+        </div>
+
+        <div class="wizard-body">
+            <div class="step-indicator">
+                <div class="step-dot active" id="dot0"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" id="dot1"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" id="dot2"></div>
+            </div>
+
+            <div class="step active" id="step0">
+                <h2>Welcome</h2>
+                <p>Let's get your GhostESP: Chat enabled device connected to your home WiFi network. This only takes a moment.</p>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="startScan()">Get Started</button>
+                </div>
+            </div>
+
+            <div class="step" id="step1">
+                <h2>Select Network</h2>
+                <div id="networkList" class="network-list">
+                    <div class="status-msg"><span class="spinner"></span> Scanning...</div>
+                </div>
+                <button class="scan-btn" onclick="scanNetworks()">Rescan</button>
+                <div class="form-group">
+                    <label for="ssidInput">Or enter SSID manually</label>
+                    <input type="text" class="form-control" id="ssidInput" placeholder="Network name">
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="goStep(0)">Back</button>
+                    <button class="btn btn-primary" id="nextToPassword" onclick="goStep(2)" disabled>Next</button>
+                </div>
+            </div>
+
+            <div class="step" id="step2">
+                <h2>Connect</h2>
+                <p>Enter the password for <strong id="selectedSSID"></strong></p>
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="WiFi password">
+                </div>
+                <div class="status-msg" id="connectStatus"></div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="goStep(1)">Back</button>
+                    <button class="btn btn-primary" id="connectBtn" onclick="connectWifi()">Connect</button>
+                </div>
+            </div>
+
+            <div class="step" id="step3">
+                <div class="success-icon">&#10003;</div>
+                <h2 style="text-align:center">Connected</h2>
+                <p style="text-align:center">Your GhostESP: Chat device is now connected to WiFi. The device will restart and launch the chat interface.</p>
+                <div class="status-msg success" id="newIpDisplay"></div>
+                <div class="btn-row" style="justify-content:center">
+                    <button class="btn btn-primary" onclick="finishSetup()">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var selectedSSID = '';
+        var currentStep = 0;
+
+        function goStep(n) {
+            var steps = document.querySelectorAll('.step');
+            for (var i = 0; i < steps.length; i++) steps[i].classList.remove('active');
+            document.getElementById('step' + n).classList.add('active');
+
+            for (var i = 0; i < 3; i++) {
+                var dot = document.getElementById('dot' + i);
+                dot.classList.remove('active', 'done');
+                if (i < n) dot.classList.add('done');
+                else if (i === n) dot.classList.add('active');
+            }
+            currentStep = n;
+
+            if (n === 2) {
+                document.getElementById('selectedSSID').textContent = selectedSSID;
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        function startScan() {
+            goStep(1);
+            scanNetworks();
+        }
+
+        function scanNetworks() {
+            var list = document.getElementById('networkList');
+            list.innerHTML = '<div class="status-msg"><span class="spinner"></span> Scanning...</div>';
+            document.getElementById('nextToPassword').disabled = true;
+
+            fetch('/api/wifi/scan').then(function(res) {
+                return res.json();
+            }).then(function(networks) {
+                if (networks.length === 0) {
+                    list.innerHTML = '<div class="status-msg">No networks found. Try rescanning.</div>';
+                    return;
+                }
+                list.innerHTML = networks.map(function(n) {
+                    return '<div class="network-item" onclick="selectNetwork(this,\'' + n.ssid.replace(/'/g, "\\'") + '\')">' +
+                        '<span class="network-name">' + escapeHtml(n.ssid) + '</span>' +
+                        '<span class="network-signal">' + n.rssi + ' dBm' + (n.secure ? ' &#128274;' : '') + '</span>' +
+                        '</div>';
+                }).join('');
+            }).catch(function() {
+                list.innerHTML = '<div class="status-msg error">Scan failed. Try again.</div>';
+            });
+        }
+
+        function selectNetwork(el, ssid) {
+            var items = document.querySelectorAll('.network-item');
+            for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
+            el.classList.add('selected');
+            selectedSSID = ssid;
+            document.getElementById('ssidInput').value = ssid;
+            document.getElementById('nextToPassword').disabled = false;
+        }
+
+        document.getElementById('ssidInput').addEventListener('input', function() {
+            selectedSSID = this.value.trim();
+            document.getElementById('nextToPassword').disabled = !selectedSSID;
+            var items = document.querySelectorAll('.network-item');
+            for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
+        });
+
+        function connectWifi() {
+            var password = document.getElementById('passwordInput').value;
+            var status = document.getElementById('connectStatus');
+            var btn = document.getElementById('connectBtn');
+
+            if (!selectedSSID) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Connecting...';
+            status.className = 'status-msg';
+            status.innerHTML = '<span class="spinner"></span> Connecting to ' + escapeHtml(selectedSSID) + '...';
+
+            fetch('/api/wifi/connect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ssid: selectedSSID, password: password })
+            }).then(function(res) {
+                return res.json();
+            }).then(function(data) {
+                if (data.success) {
+                    status.className = 'status-msg success';
+                    status.textContent = 'Connected!';
+                    if (data.ip) {
+                        document.getElementById('newIpDisplay').textContent = 'Device IP: ' + data.ip;
+                    }
+                    setTimeout(function() { goStep(3); }, 800);
+                } else {
+                    status.className = 'status-msg error';
+                    status.textContent = data.error || 'Connection failed. Check password.';
+                    btn.disabled = false;
+                    btn.textContent = 'Connect';
+                }
+            }).catch(function() {
+                status.className = 'status-msg error';
+                status.textContent = 'Request failed. Try again.';
+                btn.disabled = false;
+                btn.textContent = 'Connect';
+            });
+        }
+
+        function finishSetup() {
+            fetch('/api/setup/complete', { method: 'POST' }).catch(function() {});
+            document.querySelector('.wizard-body').innerHTML = '<div class="status-msg" style="padding:2rem"><span class="spinner"></span> Restarting device...</div>';
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

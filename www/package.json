@@ -1,0 +1,18 @@
+{
+  "name": "ghostesp-chat-webui",
+  "version": "1.0.0",
+  "description": "GhostESP: Chat Web UI - A spin-off of GhostESP: Revival",
+  "scripts": {
+    "bundle": "npm run bundle:html && npm run bundle:js",
+    "bundle:html": "node scripts/bundle.js index.html && node scripts/bundle.js setup.html",
+    "bundle:js": "node scripts/bundle.js app.js",
+    "build": "npm run bundle && npm run compress",
+    "compress": "node scripts/compress.js",
+    "deploy": "npm run build && npm run copy-to-component",
+    "copy-to-component": "node scripts/copy-to-component.js"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "terser": "^5.27.0"
+  }
+}
