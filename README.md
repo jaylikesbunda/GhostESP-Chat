@@ -5,6 +5,9 @@ Standalone, serverless, peer-to-peer, end-to-end encrypted chat system running o
 **A spin-off of GhostESP: Revival firmware.**
 
 
+<img width="1391" height="739" alt="image" src="https://github.com/user-attachments/assets/b3287b8d-1fe8-4506-8733-f39cc0e262a2" />
+
+
 ## Disclaimer
 
 **This is experimental software under active development.** While GhostESP: Chat implements cryptographic best practices you should be aware of current limitations:
